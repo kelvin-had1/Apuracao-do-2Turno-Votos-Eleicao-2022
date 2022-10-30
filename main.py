@@ -2,6 +2,9 @@ import requests
 import json
 import os
 import time
+import pymysql
+
+
 
 while(1):
     os.system("cls")
@@ -15,12 +18,19 @@ while(1):
     porcentagem = []
     porcentagemTotal = dadosEmJson['pesi']
     ultAtualizacao = dadosEmJson['dg'] + ' ' + dadosEmJson['hg']
-
+    
     for informacoes in dadosEmJson['cand']:
         if informacoes['seq'] in ['1', '2']:
             candidatos.append(informacoes['nm'])
             votos.append(informacoes['vap'])
             porcentagem.append(informacoes['pvap'])
+
+    for i in range(len(candidatos)):
+        conexao = pymysql.connect(db='eleicoes', user='root', passwd='')
+        cursor = conexao.cursor()
+        cursor.execute('insert into candidatos(nome, votos, porcentagem, hora, porcentagemApurada) values ("'+candidatos[i]+'", "'+votos[i]+'", "'+porcentagem[i]+'", "'+ultAtualizacao+'", "'+porcentagemTotal+'")')
+        conexao.commit()
+        conexao.close()
 
     print("TOTAL APURADO: {}%".format(porcentagemTotal))
     print("")
@@ -32,7 +42,7 @@ while(1):
 
     print("ATUALIZADO EM {}".format(ultAtualizacao))
     print("")
-    time.sleep(15)
+    time.sleep(60)
     
 
     
