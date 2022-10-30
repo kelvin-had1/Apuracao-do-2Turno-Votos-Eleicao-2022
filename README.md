@@ -1,0 +1,1 @@
+#Projeto para realizar a apuração dos votos do 2º Turno das eleições de 2022
